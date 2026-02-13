@@ -1,4 +1,4 @@
-import { useMemo, useRef, useCallback, useState, useEffect } from 'react';
+import { useMemo, useRef, useCallback, useState } from 'react';
 import type { CellValue } from '../utils/gridData';
 import { getColumnCount, colIndexToLetter } from '../utils/gridData';
 import { getDefaultSheetData } from '../utils/sheetDefaults';
@@ -16,11 +16,7 @@ export function SheetTab({ data, onChange }: SheetTabProps) {
   const displayData = useMemo(() => evaluateSheet(rawData), [rawData]);
   const prevDisplayRef = useRef<CellValue[][]>(displayData);
   const gridRef = useRef<SpreadsheetGridRefHandle>(null);
-  const [pendingRefocus, setPendingRefocus] = useState<{
-    row: number;
-    col: number;
-    expectedFormula: string;
-  } | null>(null);
+  const [activeCell, setActiveCell] = useState<{ row: number; col: number } | null>(null);
 
   const handleGridChange = (newDisplay: CellValue[][]) => {
     const prev = prevDisplayRef.current;
@@ -49,6 +45,7 @@ export function SheetTab({ data, onChange }: SheetTabProps) {
       to: { row: number; col: number } | null,
       fromCellCurrentValue?: string
     ) => {
+      setActiveCell(to);
       if (!from || !to || (from.row === to.row && from.col === to.col)) return;
       const raw = rawData[from.row]?.[from.col];
       const rawStr =
@@ -70,31 +67,36 @@ export function SheetTab({ data, onChange }: SheetTabProps) {
             )
           : Array.from({ length: columnCount }, (_, c) => row[c] ?? null)
       );
+      // Sync prevDisplayRef so handleGridChange won't overwrite the formula
+      prevDisplayRef.current = evaluateSheet(nextRaw);
       onChange(nextRaw);
-      setPendingRefocus({ row: from.row, col: from.col, expectedFormula: newRawStr });
     },
     [rawData, columnCount, onChange]
   );
 
-  useEffect(() => {
-    if (!pendingRefocus) return;
-    const current = rawData[pendingRefocus.row]?.[pendingRefocus.col];
-    const match =
-      current !== null &&
-      current !== undefined &&
-      String(current).trim() === pendingRefocus.expectedFormula;
-    if (match) {
-      const { row, col } = pendingRefocus;
-      setPendingRefocus(null);
-      const id = setTimeout(() => {
-        gridRef.current?.setActiveCell({ row, col });
-      }, 0);
-      return () => clearTimeout(id);
-    }
-  }, [rawData, pendingRefocus]);
+  // Compute formula bar text: show raw formula for active cell
+  const formulaBarText = useMemo(() => {
+    if (!activeCell) return '';
+    const raw = rawData[activeCell.row]?.[activeCell.col];
+    return raw !== null && raw !== undefined ? String(raw) : '';
+  }, [activeCell, rawData]);
 
   return (
     <div className="sheet-tab">
+      <div className="formula-bar">
+        <span className="formula-bar-label">
+          {activeCell ? colIndexToLetter(activeCell.col) + (activeCell.row + 1) : ''}
+        </span>
+        <span className="formula-bar-separator" />
+        <span className="formula-bar-fx">fx</span>
+        <input
+          className="formula-bar-input"
+          value={formulaBarText}
+          readOnly
+          tabIndex={-1}
+          placeholder="Select a cell"
+        />
+      </div>
       <SpreadsheetGrid
         ref={gridRef}
         data={displayData}

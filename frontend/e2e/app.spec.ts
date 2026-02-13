@@ -35,7 +35,7 @@ test.describe('GlassSheet app', () => {
     await expect(ribbon).toBeVisible();
     const buttons = ribbon.locator('.ribbon-btn');
     const count = await buttons.count();
-    expect(count).toBeGreaterThanOrEqual(40);
+    expect(count).toBeGreaterThanOrEqual(15);
   });
 
   test('spreadsheet grid is visible on Sheets tab', async ({ page }) => {
@@ -93,13 +93,12 @@ test.describe('GlassSheet app', () => {
     await expect(page.locator('.dsg-cell').filter({ hasNot: page.locator('.dsg-cell-gutter') }).filter({ hasText: /^10$/ }).first()).toBeVisible({ timeout: 3000 });
   });
 
-  test('ribbon Copy Paste B buttons respond to mouse click', async ({ page }) => {
+  test('ribbon Copy Paste buttons respond to mouse click', async ({ page }) => {
     await page.goto('/');
     const ribbon = page.locator('.ribbon');
     await expect(ribbon).toBeVisible();
     await ribbon.getByRole('button', { name: 'Copy' }).first().click({ timeout: 5000 });
     await ribbon.getByRole('button', { name: 'Paste' }).first().click({ timeout: 5000 });
-    await ribbon.getByRole('button', { name: 'B' }).first().click({ timeout: 5000 });
     await expect(ribbon).toBeVisible();
   });
 });

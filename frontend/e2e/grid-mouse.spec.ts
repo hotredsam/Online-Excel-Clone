@@ -112,7 +112,11 @@ test.describe('Grid — mouse simulation', () => {
     await page.waitForTimeout(500);
     const hasFormulaOrResult = await page.locator('.dsg-container').evaluate(() => {
       const inputs = document.querySelectorAll('.dsg-input');
-      const hasFormula = Array.from(inputs).some((el) => (el as HTMLInputElement).value === '=1+2');
+      const hasFormula = Array.from(inputs).some((el) => {
+        const inp = el as HTMLInputElement;
+        // Check input value (when editing) or span text content (when not editing)
+        return inp.value === '=1+2' || (el.textContent || '').trim() === '3';
+      });
       const displays = document.querySelectorAll('.dsg-cell-display');
       const hasResult = Array.from(displays).some((el) => (el.textContent || '').trim() === '3');
       return hasFormula || hasResult;

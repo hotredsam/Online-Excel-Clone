@@ -470,6 +470,58 @@
 .app [role="tab"]:focus:not(:focus-visible) {
   outline: none;
 }
+
+/* Formula bar (like Excel's fx bar) */
+.formula-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 28px;
+  background: var(--glass-surface-panel, #f8f8f8);
+  border-bottom: 1px solid var(--glass-border, #d0d0d0);
+  flex-shrink: 0;
+  font-size: 13px;
+  font-family: inherit;
+}
+.formula-bar-label {
+  min-width: 54px;
+  padding: 0 8px;
+  text-align: center;
+  font-weight: 600;
+  color: var(--glass-text-primary, #222);
+  border-right: 1px solid var(--glass-border, #d0d0d0);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--glass-surface-subtle, #f0f0f0);
+  user-select: none;
+}
+.formula-bar-separator {
+  width: 0;
+}
+.formula-bar-fx {
+  padding: 0 6px;
+  color: var(--glass-text-secondary, #888);
+  font-style: italic;
+  font-weight: 500;
+  user-select: none;
+  border-right: 1px solid var(--glass-border, #d0d0d0);
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.formula-bar-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0 8px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--glass-text-primary, #222);
+  height: 100%;
+}
 /* Touch-friendly hit areas */
 @media (pointer: coarse) {
   .tab-bar button {

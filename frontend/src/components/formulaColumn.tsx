@@ -34,10 +34,8 @@ export const FormulaCellComponent = memo(function FormulaCellComponent(
       : displayValue;
 
   const [editingValue, setEditingValue] = useState('');
-  const inputValue = focus ? editingValue : displayValue;
 
   useLayoutEffect(() => {
-    if (!inputRef.current) return;
     const wasFocused = prevFocusRef.current;
     prevFocusRef.current = focus;
     if (focus) {
@@ -45,12 +43,12 @@ export const FormulaCellComponent = memo(function FormulaCellComponent(
         const initial = getRaw ? rawValue : displayValue;
         setEditingValue(initial);
         columnData?.setUncommitted?.(rowIndex, columnIndex, initial);
-        inputRef.current.focus();
-        inputRef.current.select();
+        inputRef.current?.focus();
+        inputRef.current?.select();
       }
     } else {
       setEditingValue(displayValue);
-      inputRef.current.blur();
+      inputRef.current?.blur();
     }
   }, [focus, getRaw, rawValue, displayValue]);
 
@@ -66,26 +64,32 @@ export const FormulaCellComponent = memo(function FormulaCellComponent(
     setRowData(parseInput(v));
   };
 
-  // #region agent log
-  if (rowIndex <= 1 && columnIndex <= 1) {
-    fetch('http://127.0.0.1:7244/ingest/7c21604c-844c-488a-9658-bcef8075aaec',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'formulaColumn.tsx:render',message:'cell render state',data:{rowIndex,columnIndex,focus,inputValue,displayValue,editingValue},timestamp:Date.now(),hypothesisId:'H1',runId:'post-fix'})}).catch(()=>{});
+  if (focus) {
+    return (
+      <input
+        ref={inputRef}
+        className={'dsg-input' + (columnData?.alignRight ? ' dsg-input-align-right' : '')}
+        placeholder={active ? columnData?.placeholder : undefined}
+        tabIndex={-1}
+        style={{ pointerEvents: 'auto' }}
+        value={editingValue}
+        onChange={handleChange}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') {
+            setEditingValue(displayValue);
+          }
+        }}
+      />
+    );
   }
-  // #endregion
 
+  // Not focused: render as plain text so DOM text content is visible for tests & accessibility
   return (
-    <input
-      ref={inputRef}
+    <span
       className={'dsg-input' + (columnData?.alignRight ? ' dsg-input-align-right' : '')}
-      placeholder={active ? columnData?.placeholder : undefined}
-      tabIndex={-1}
-      style={{ pointerEvents: focus ? 'auto' : 'none' }}
-      value={inputValue}
-      onChange={handleChange}
-      onKeyDown={(e) => {
-        if (e.key === 'Escape') {
-          setEditingValue(displayValue);
-        }
-      }}
-    />
+      style={{ pointerEvents: 'none', display: 'flex', alignItems: 'center' }}
+    >
+      {displayValue}
+    </span>
   );
 });

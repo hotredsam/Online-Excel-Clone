@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Ribbon } from './components/Ribbon';
 import { SheetTab } from './components/SheetTab';
@@ -8,6 +8,7 @@ import { SettingsTab } from './components/SettingsTab';
 import { uploadFile, saveProject, exportSheet, getProject } from './api/client';
 import { addRecentProjectId } from './utils/recentProjects';
 import type { CellValue } from './utils/gridData';
+import { getColumnCount } from './utils/gridData';
 import './App.css';
 
 type TabId = 'sheets' | 'projects' | 'settings';
@@ -22,6 +23,31 @@ function App() {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [exportError, setExportError] = useState<string | null>(null);
   const [exporting, setExporting] = useState<'xlsx' | 'csv' | null>(null);
+  const undoStackRef = useRef<CellValue[][][]>([]);
+  const redoStackRef = useRef<CellValue[][][]>([]);
+
+
+  const handleSheetChange = useCallback((newData: CellValue[][]) => {
+    setSheetData(newData);
+  }, []);
+
+  const handleUndo = useCallback(() => {
+    setSheetData(prev => {
+      const last = undoStackRef.current.pop();
+      if (!last) return prev;
+      redoStackRef.current.push(prev.map(r => [...r]));
+      return last;
+    });
+  }, []);
+
+  const handleRedo = useCallback(() => {
+    setSheetData(prev => {
+      const next = redoStackRef.current.pop();
+      if (!next) return prev;
+      undoStackRef.current.push(prev.map(r => [...r]));
+      return next;
+    });
+  }, []);
 
   const handleFileSelect = async (file: File) => {
     setUploadError(null);
@@ -101,6 +127,64 @@ function App() {
     }
   };
 
+  // Clipboard: copy/cut/paste use the browser clipboard API
+  const handleCopy = useCallback(() => {
+    document.execCommand('copy');
+  }, []);
+  const handleCut = useCallback(() => {
+    document.execCommand('cut');
+  }, []);
+  const handlePaste = useCallback(() => {
+    document.execCommand('paste');
+  }, []);
+
+  const withUndo = useCallback((fn: (prev: CellValue[][]) => CellValue[][]) => {
+    setSheetData(prev => {
+      undoStackRef.current.push(prev.map(r => [...r]));
+      if (undoStackRef.current.length > 50) undoStackRef.current.shift();
+      redoStackRef.current = [];
+      return fn(prev);
+    });
+  }, []);
+
+  const handleInsertRow = useCallback(() => {
+    withUndo(prev => {
+      const colCount = getColumnCount(prev);
+      return [...prev, Array.from({ length: colCount }, () => null as CellValue)];
+    });
+  }, [withUndo]);
+
+  const handleInsertCol = useCallback(() => {
+    withUndo(prev => prev.map(row => [...row, null]));
+  }, [withUndo]);
+
+  const handleDeleteRow = useCallback(() => {
+    withUndo(prev => prev.length <= 1 ? prev : prev.slice(0, -1));
+  }, [withUndo]);
+
+  const handleDeleteCol = useCallback(() => {
+    withUndo(prev => {
+      const colCount = getColumnCount(prev);
+      return colCount <= 1 ? prev : prev.map(row => row.slice(0, -1));
+    });
+  }, [withUndo]);
+
+  const handleClear = useCallback(() => {
+    withUndo(() => getDefaultSheetData());
+  }, [withUndo]);
+
+  const handleSortAZ = useCallback(() => {
+    withUndo(prev => [...prev].sort((a, b) =>
+      String(a[0] ?? '').localeCompare(String(b[0] ?? ''), undefined, { numeric: true })
+    ));
+  }, [withUndo]);
+
+  const handleSortZA = useCallback(() => {
+    withUndo(prev => [...prev].sort((a, b) =>
+      String(b[0] ?? '').localeCompare(String(a[0] ?? ''), undefined, { numeric: true })
+    ));
+  }, [withUndo]);
+
   return (
     <ErrorBoundary>
       <div className="app">
@@ -156,8 +240,20 @@ function App() {
                   save: !projectId || saveStatus === 'saving',
                   export: !!exporting,
                 }}
+                onCopy={handleCopy}
+                onCut={handleCut}
+                onPaste={handlePaste}
+                onInsertRow={handleInsertRow}
+                onInsertCol={handleInsertCol}
+                onDeleteRow={handleDeleteRow}
+                onDeleteCol={handleDeleteCol}
+                onClear={handleClear}
+                onSortAZ={handleSortAZ}
+                onSortZA={handleSortZA}
+                onUndo={handleUndo}
+                onRedo={handleRedo}
               />
-              <SheetTab data={sheetData} onChange={setSheetData} />
+              <SheetTab data={sheetData} onChange={handleSheetChange} />
             </div>
           )}
           {activeTab === 'projects' && (
