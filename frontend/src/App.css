@@ -1,0 +1,483 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Tab bar: Apple-style nav strip (frosted panel) */
+.tab-bar {
+  display: flex;
+  gap: var(--glass-space-1);
+  padding: var(--glass-space-2) var(--glass-space-4);
+  background: var(--glass-surface-panel);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-sm), var(--glass-highlight);
+  flex-shrink: 0;
+  align-items: center;
+  min-height: 48px;
+}
+
+.tab-bar button {
+  padding: var(--glass-space-2) var(--glass-space-4);
+  border-radius: var(--glass-radius-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--glass-text-secondary);
+  font-weight: 500;
+  transition: background var(--glass-transition), border-color var(--glass-transition), color var(--glass-transition);
+  min-height: 36px;
+  cursor: pointer;
+  font-size: var(--glass-body-size);
+}
+
+.tab-bar button:hover {
+  color: var(--glass-text-primary);
+  background: var(--glass-surface-subtle);
+}
+
+.tab-bar button.active {
+  background: var(--glass-surface-elevated);
+  color: var(--glass-text-primary);
+  border-color: var(--glass-border);
+}
+
+.tab-bar button:focus-visible {
+  outline: 2px solid var(--glass-accent);
+  outline-offset: var(--glass-outline-offset, 2px);
+}
+.tab-bar button:focus:not(:focus-visible) {
+  outline: none;
+}
+.tab-bar button:active {
+  background: var(--glass-surface-strong);
+}
+
+.main {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Ribbon: frosted header surface */
+.ribbon {
+  background: var(--glass-surface-header);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border-bottom: 1px solid var(--glass-border-header);
+  box-shadow: var(--glass-shadow-sm);
+  flex-shrink: 0;
+  color: var(--glass-text-header);
+  min-height: 0;
+}
+
+.ribbon .ribbon-tab {
+  color: var(--glass-text-header-muted);
+}
+
+.ribbon .ribbon-tab.active {
+  color: var(--glass-text-header);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--glass-border-header);
+  border-bottom-color: var(--glass-surface-header);
+}
+
+.ribbon .ribbon-group-label {
+  color: var(--glass-text-header-muted);
+}
+
+.ribbon .ribbon-btn {
+  color: var(--glass-text-header);
+  background: transparent;
+  border: 1px solid transparent;
+}
+
+.ribbon .ribbon-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: var(--glass-border-header);
+}
+.ribbon .ribbon-btn:active:not(:disabled) {
+  background: rgba(0, 0, 0, 0.1);
+}
+.ribbon .ribbon-btn:focus:not(:focus-visible) {
+  outline: none;
+}
+.ribbon .ribbon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ribbon .ribbon-project-name {
+  color: var(--glass-text-header);
+}
+
+.ribbon-tabs {
+  display: flex;
+  padding: 0 var(--glass-space-2);
+  gap: var(--glass-space-1);
+  border-bottom: 1px solid var(--glass-border-header);
+}
+
+.ribbon-tab {
+  padding: var(--glass-space-2) var(--glass-space-4);
+  font-weight: 500;
+  border: none;
+  border-radius: var(--glass-radius-sm) var(--glass-radius-sm) 0 0;
+  background: transparent;
+  color: var(--glass-text-secondary);
+  margin-bottom: -1px;
+  transition: background var(--glass-transition), color var(--glass-transition);
+}
+
+.ribbon-tab.active {
+  background: var(--glass-surface-panel);
+  color: var(--glass-text-primary);
+  border: 1px solid var(--glass-border);
+  border-bottom-color: var(--glass-surface-header);
+}
+
+.ribbon-tab:focus-visible {
+  outline: 2px solid var(--glass-accent);
+  outline-offset: var(--glass-outline-offset, 2px);
+}
+.ribbon-tab:focus:not(:focus-visible) {
+  outline: none;
+}
+.ribbon-tab {
+  cursor: pointer;
+}
+
+.ribbon-content {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 var(--glass-space-4);
+  padding: var(--glass-space-2) var(--glass-space-4);
+  min-height: 48px;
+  row-gap: var(--glass-space-2);
+  column-gap: var(--glass-space-4);
+}
+
+.ribbon-group {
+  display: flex;
+  align-items: center;
+  gap: var(--glass-space-2);
+}
+
+.ribbon-group-label {
+  font-size: var(--glass-section-size);
+  text-transform: uppercase;
+  letter-spacing: var(--glass-section-spacing);
+  color: var(--glass-text-secondary);
+  margin-right: var(--glass-space-1);
+}
+
+.ribbon-group-buttons {
+  display: flex;
+  gap: var(--glass-space-1);
+  flex-wrap: wrap;
+}
+
+.ribbon-btn {
+  padding: var(--glass-space-1) var(--glass-space-2);
+  font-size: var(--glass-muted-size);
+  border-radius: var(--glass-radius-sm);
+  min-height: 28px;
+  transition: background var(--glass-transition), border-color var(--glass-transition);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ribbon-btn:focus-visible {
+  outline: 2px solid var(--glass-accent);
+  outline-offset: var(--glass-outline-offset, 2px);
+}
+
+.ribbon-project-name {
+  font-size: var(--glass-body-size);
+  color: var(--glass-text-primary);
+  max-width: 12rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ribbon-errors {
+  display: flex;
+  gap: var(--glass-space-3);
+  margin-left: auto;
+}
+
+.ribbon-error {
+  font-size: var(--glass-muted-size);
+  color: var(--glass-error);
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ribbon-errors .ribbon-error + .ribbon-error {
+  margin-left: 0;
+}
+
+/* Error boundary: panel + typography (detailed styling in shared UI step) */
+.error-boundary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 40vh;
+  padding: var(--glass-space-8);
+  text-align: center;
+  background: var(--glass-surface-panel);
+  margin: var(--glass-space-4);
+  border-radius: var(--glass-radius-lg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  box-shadow: var(--glass-shadow-md), var(--glass-highlight);
+}
+
+.error-boundary h2 {
+  margin: 0 0 var(--glass-space-2);
+  font-size: var(--glass-title-size);
+  font-weight: var(--glass-title-weight);
+  color: var(--glass-text-primary);
+  line-height: var(--glass-line-height);
+}
+.error-boundary button {
+  margin-top: var(--glass-space-2);
+}
+
+.error-boundary-message {
+  color: var(--glass-text-secondary);
+  margin: 0 0 var(--glass-space-4);
+  font-size: var(--glass-body-size);
+}
+
+/* Sheet tab: card/panel surface */
+.sheet-tab {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--glass-surface-card);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  margin: var(--glass-space-2);
+  border-radius: var(--glass-radius-md);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-sm), var(--glass-highlight);
+  min-height: 0;
+}
+
+.spreadsheet-grid-wrap {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
+}
+.spreadsheet-grid-wrap::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+.spreadsheet-grid-wrap::-webkit-scrollbar-thumb {
+  background: var(--glass-border-strong);
+  border-radius: var(--glass-radius-sm);
+}
+.spreadsheet-grid-wrap::-webkit-scrollbar-corner {
+  background: var(--glass-surface-subtle);
+}
+
+.spreadsheet-grid-wrap > div {
+  min-height: 100%;
+}
+
+/* Grid: dark text in cells (readable on light background) */
+.spreadsheet-grid-wrap .dsg-container {
+  --dsg-cell-background-color: #ffffff;
+  --dsg-header-text-color: #5f6368;
+  --dsg-header-active-text-color: #1a1a1a;
+  color: #1a1a1a;
+  background: #f8f9fa;
+}
+
+.spreadsheet-grid-wrap .dsg-cell,
+.spreadsheet-grid-wrap .dsg-cell-header,
+.spreadsheet-grid-wrap .dsg-cell-gutter {
+  color: #1a1a1a;
+}
+
+.spreadsheet-grid-wrap .dsg-input {
+  color: #1a1a1a;
+  background: #fff;
+}
+
+.spreadsheet-grid-wrap .dsg-cell-header-container {
+  color: #5f6368;
+}
+.spreadsheet-grid-wrap .dsg-cell:focus-within,
+.spreadsheet-grid-wrap .dsg-input:focus {
+  outline: 2px solid var(--glass-accent);
+  outline-offset: -1px;
+}
+.spreadsheet-grid-wrap .dsg-cell {
+  border-color: rgba(0, 0, 0, 0.06);
+}
+.spreadsheet-grid-wrap .dsg-container {
+  font-size: var(--glass-body-size);
+}
+
+/* Projects and Settings tabs: card/panel */
+.projects-tab,
+.settings-tab {
+  padding: var(--glass-space-6);
+  margin: var(--glass-space-2);
+  background: var(--glass-surface-panel);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border-radius: var(--glass-radius-md);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow-sm), var(--glass-highlight);
+  overflow: auto;
+  min-height: 0;
+}
+.projects-tab h2:first-child,
+.settings-tab h2:first-child {
+  margin-top: 0;
+}
+
+.projects-tab h2,
+.settings-tab h2 {
+  margin-top: 0;
+  font-size: var(--glass-title-size);
+  font-weight: var(--glass-title-weight);
+  color: var(--glass-text-primary);
+}
+
+.projects-tab h3,
+.settings-tab h3 {
+  font-size: var(--glass-body-size);
+  margin: var(--glass-space-4) 0 var(--glass-space-2);
+  color: var(--glass-text-secondary);
+  font-weight: 500;
+}
+
+.project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.project-list li {
+  list-style: none;
+}
+
+.project-row {
+  display: flex;
+  align-items: center;
+  gap: var(--glass-space-2);
+  padding: var(--glass-space-2) 0;
+  border-bottom: 1px solid var(--glass-border);
+}
+.project-row:last-child {
+  border-bottom: none;
+}
+.project-row button {
+  flex-shrink: 0;
+}
+
+.project-row .project-name {
+  flex: 1;
+  min-width: 0;
+  color: var(--glass-text-primary);
+}
+
+.project-row input[type="text"] {
+  flex: 1;
+  padding: var(--glass-space-1) var(--glass-space-2);
+  border-radius: var(--glass-radius-sm);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-surface-subtle);
+  color: var(--glass-text-primary);
+  font-family: var(--glass-font);
+  font-size: var(--glass-body-size);
+  transition: border-color var(--glass-transition), box-shadow var(--glass-transition);
+}
+
+.project-row input[type="text"]::placeholder {
+  color: var(--glass-text-muted);
+}
+
+.project-row input[type="text"]:focus {
+  outline: none;
+  border-color: var(--glass-accent);
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
+}
+
+.project-row input[type="text"]:focus-visible {
+  outline: 2px solid var(--glass-accent);
+  outline-offset: 0;
+}
+.project-row input[type="text"]:focus:not(:focus-visible) {
+  outline: none;
+}
+.project-row button:focus-visible {
+  outline: 2px solid var(--glass-accent);
+  outline-offset: 2px;
+}
+
+.projects-tab .error {
+  color: var(--glass-error);
+  font-size: var(--glass-muted-size);
+}
+.projects-tab .glass-muted:last-child {
+  margin-top: var(--glass-space-4);
+}
+.projects-tab section h3 {
+  scroll-margin-top: var(--glass-space-4);
+}
+
+.settings-tab .setting-row {
+  display: flex;
+  align-items: center;
+  gap: var(--glass-space-3);
+  padding: var(--glass-space-2) 0;
+  color: var(--glass-text-primary);
+}
+
+.settings-tab .setting-label {
+  min-width: 8rem;
+  color: var(--glass-text-secondary);
+  font-size: var(--glass-body-size);
+}
+
+.settings-tab .setting-value {
+  font-family: var(--glass-font-mono);
+  font-size: var(--glass-muted-size);
+}
+.settings-tab .setting-row:last-child {
+  padding-bottom: 0;
+}
+/* Utility: ensure focus ring only on keyboard */
+.app button:focus:not(:focus-visible),
+.app input:focus:not(:focus-visible),
+.app [role="tab"]:focus:not(:focus-visible) {
+  outline: none;
+}
+/* Touch-friendly hit areas */
+@media (pointer: coarse) {
+  .tab-bar button {
+    min-height: 44px;
+    padding: var(--glass-space-3) var(--glass-space-4);
+  }
+  .ribbon-btn {
+    min-height: 36px;
+    padding: var(--glass-space-2) var(--glass-space-3);
+  }
+}

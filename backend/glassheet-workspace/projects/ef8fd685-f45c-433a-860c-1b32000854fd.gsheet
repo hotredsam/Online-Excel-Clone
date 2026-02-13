@@ -1,0 +1,33 @@
+{
+  "id": "ef8fd685-f45c-433a-860c-1b32000854fd",
+  "name": "sample",
+  "sheets": [
+    {
+      "name": "Sheet1",
+      "data": [
+        [
+          "Name",
+          "Score",
+          "Grade"
+        ],
+        [
+          "Alice",
+          "95",
+          "A"
+        ],
+        [
+          "Bob",
+          "87",
+          "B"
+        ],
+        [
+          "Carol",
+          "92",
+          "A"
+        ]
+      ]
+    }
+  ],
+  "createdAt": "2026-02-13T05:03:11.948Z",
+  "updatedAt": "2026-02-13T05:03:14.529Z"
+}
