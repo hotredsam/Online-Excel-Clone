@@ -1,0 +1,14 @@
+{
+  "id": "session-1772449846485",
+  "startedAt": "2026-03-02T11:10:46.485Z",
+  "platform": "win32",
+  "cwd": "C:\\Users\\hotre\\OneDrive\\Desktop\\Coding Projects\\CSV Editor",
+  "context": {},
+  "metrics": {
+    "edits": 0,
+    "commands": 0,
+    "tasks": 0,
+    "errors": 0
+  },
+  "restoredAt": "2026-03-02T11:11:12.992Z"
+}
