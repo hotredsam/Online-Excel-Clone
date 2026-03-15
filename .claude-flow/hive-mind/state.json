@@ -7,11 +7,11 @@
     "history": []
   },
   "sharedMemory": {},
-  "createdAt": "2026-03-15T16:29:25.782Z",
-  "updatedAt": "2026-03-15T16:29:25.782Z",
+  "createdAt": "2026-03-15T16:30:21.116Z",
+  "updatedAt": "2026-03-15T16:30:21.117Z",
   "queen": {
-    "agentId": "queen-1773592165782",
-    "electedAt": "2026-03-15T16:29:25.782Z",
+    "agentId": "queen-1773592221116",
+    "electedAt": "2026-03-15T16:30:21.116Z",
     "term": 1
   }
 }
